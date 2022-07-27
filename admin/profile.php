@@ -1,0 +1,108 @@
+<?php include("includes/header.php"); ?>
+   
+    <div id="main-wrapper" data-navbarbg="skin6" data-theme="light" data-layout="vertical" data-sidebartype="full" data-boxed-layout="full">
+      
+        <?php include("includes/top-nav.php"); ?>
+        
+        <?php include("includes/sidebar.php"); ?>
+
+        <div class="page-wrapper">
+           
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-5 align-self-center">
+                        <h4 class="page-title">Profile</h4>
+                    </div>
+                    <div class="col-7 align-self-center">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="index.php">Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="container-fluid">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card p-3">
+                            <h4>Your <span class="text-gold">Profile</span></h4>
+                            <div>
+                                <form action="" method="POST">
+                                    <?php
+                                    $admin = mysqli_fetch_array(mysqli_query($connection, "SELECT email,password FROM admin LIMIT 1"));
+                                        if (isset($_POST['updatebtn'])) {
+                                            
+                                            // Lets get data from form inputs
+
+                                            $email = $_POST['email'];
+                                            $password = $_POST['password'];
+
+                                            // Escape data from SQL Injection
+
+                                            $email = mysqli_real_escape_string($connection, $_POST['email']);
+                                            $password = mysqli_real_escape_string($connection, $_POST['password']);
+
+                                            // Update admin profile
+                                            $update = mysqli_query($connection, "
+                                                UPDATE admin 
+                                                    SET 
+                                                        email = '$email', 
+                                                        password = '$password'
+                                                ");
+
+                                            if ($update) {
+                                                
+                                                echo '
+                                                    <div class="alert alert-success">
+                                                        <strong>Alert! </strong> Profile Updated Successfully!
+                                                    </div>
+                                                ';
+                                                // Write whatever your message is
+                                            } else {
+
+                                                echo '
+                                                    <div class="alert alert-danger">
+                                                        <strong>Alert! </strong> Something Went Wrong. Please try again!
+                                                    </div>
+                                                ';
+
+                                            }
+
+                                        }   
+
+                                    ?>
+                                    <div class="form-group">
+                                        <label for="">Email</label>
+                                        <input type="email" name="email" value="<?php echo (isset($admin['email']))? $admin['email'] : ''; ?>" placeholder="Your Email" class="form-control form-control-lg" required="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="">Password</label>
+                                        <input type="password" name="password" value="<?php echo (isset($admin['password']))? $admin['password'] : ''; ?>" placeholder="Your Password" class="form-control form-control-lg" required="">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input type="submit" name="updatebtn" value="Update Profile" class="btn btn-warning btn-block btn-lg text-white">
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+           
+        </div>
+       
+    </div>
+   
+<?php include("includes/footer.php"); ?>
